@@ -1,0 +1,50 @@
+{
+  "name": "bookmyspot-merchant",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start -p 3002 -H 0.0.0.0",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@nextui-org/react": "^2.4.2",
+    "@radix-ui/react-label": "^2.1.0",
+    "@radix-ui/react-select": "^2.1.1",
+    "@radix-ui/react-separator": "^1.1.0",
+    "@radix-ui/react-slot": "^1.1.0",
+    "@radix-ui/react-switch": "^1.1.0",
+    "@radix-ui/react-tabs": "^1.1.13",
+    "bson": "^6.10.4",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "framer-motion": "^11.2.12",
+    "konva": "^10.0.2",
+    "lucide-react": "^0.397.0",
+    "next": "^14.2.32",
+    "next-auth": "^4.24.7",
+    "react": "^18",
+    "react-datepicker": "^7.2.0",
+    "react-dom": "^18",
+    "react-google-autocomplete": "^2.7.3",
+    "react-konva": "^18.2.10",
+    "recharts": "^2.12.7",
+    "socket.io-client": "^4.8.1",
+    "sonner": "^2.0.7",
+    "tailwind-merge": "^2.3.0",
+    "tailwindcss-animate": "^1.0.7",
+    "zustand": "^5.0.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "@types/uuid": "^10.0.0",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.4",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
+  }
+}
