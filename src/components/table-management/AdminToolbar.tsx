@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -12,11 +12,14 @@ import {
   RotateCwIcon,
   Loader2Icon,
   Copy,
+  UploadIcon,
 } from "lucide-react";
 import useRestaurantStore from "@/lib/stores/restaurant-store";
 import { RestaurantLayout, Table } from "@/types/restaurant";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
+import { Textarea } from "../ui/textarea";
+import { Checkbox } from "@nextui-org/react";
 
 const AdminToolbar = ({
   triggerRefish,
@@ -51,6 +54,12 @@ const AdminToolbar = ({
   const [isLoading, setIsLoading] = useState(false);
 
   const { data: session } = useSession();
+
+  const [importToggle, setImportToggle] = useState<boolean>(false);
+
+  const handelImportToggleCheckbox = () => {
+    setImportToggle(!importToggle);
+  };
 
   const handleExport = () => {
     const json = exportLayout();
@@ -135,6 +144,18 @@ const AdminToolbar = ({
         return;
       }
 
+      // check table name are same
+      const tableNames = mappedLayout.components
+        .filter((c: any) => c.type === "table")
+        .map((t: any) => t.name.trim().toLowerCase());
+      const uniqueTableNames = new Set(tableNames);
+      if (tableNames.length !== uniqueTableNames.size) {
+        toast.error(
+          "Table names must be unique. Please name all tables before saving."
+        );
+        return;
+      }
+
       const response = await fetch(`${backend_url}/selection-model`, {
         method: "POST",
         headers: {
@@ -143,23 +164,27 @@ const AdminToolbar = ({
         body: JSON.stringify(mappedLayout),
       });
 
+
       if (!response.ok) {
         const errorData = await response.json();
-        toast.error(errorData.message || "Failed to save layout.");
+        toast.error(
+          errorData.message ||
+            "Failed to save layout. Please check table names are unique and not empty, and other errors."
+        );
         return;
       }
 
       const data = await response.json();
-      console.log(data);
       toast.success("Layout saved successfully!");
       triggerRefish();
       createNewLayout();
+      handelClose();
     } catch (error) {
       toast.error("Failed to save layout.");
       console.error("Error saving layout:", error);
+      handelClose();
     } finally {
       setIsLoading(false);
-      handelClose();
     }
   };
 
@@ -479,28 +504,43 @@ const AdminToolbar = ({
               </Button>
             </div>
 
-            {/* <div className="space-y-2">
-              <Label htmlFor="import" className="text-sm font-medium">
-                Import Layout JSON
-              </Label>
-              <Textarea
-                id="import"
-                placeholder="Paste JSON here..."
-                value={importText}
-                onChange={(e) => setImportText(e.target.value)}
-                rows={4}
-                className="text-xs"
-              />
-              <Button
-                onClick={handleImport}
-                size="sm"
-                className="w-full"
-                disabled={!importText.trim()}
-              >
-                <UploadIcon className="h-4 w-4 mr-1" />
-                Import
-              </Button>
-            </div> */}
+            <div className="space-y-2">
+              <div>
+                <Checkbox
+                  id="showImportToggle"
+                  size="sm"
+                  onChange={handelImportToggleCheckbox}
+                  isSelected={importToggle}
+                />
+                <Label
+                  form="showImportToggle"
+                  className="text-xs font-medium"
+                  htmlFor="import"
+                >
+                  Do you wont to import a JSON file?
+                </Label>
+              </div>
+
+              <div className={`space-y-2 ${!importToggle && "hidden"}`}>
+                <Textarea
+                  id="import"
+                  placeholder="Paste JSON here..."
+                  value={importText}
+                  onChange={(e) => setImportText(e.target.value)}
+                  rows={4}
+                  className="text-xs"
+                />
+                <Button
+                  onClick={() => handleImport()}
+                  size="sm"
+                  className="w-full"
+                  disabled={!importText.trim()}
+                >
+                  <UploadIcon className="h-4 w-4 mr-1" />
+                  Import
+                </Button>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>
