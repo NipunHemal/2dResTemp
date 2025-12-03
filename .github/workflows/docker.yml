@@ -25,7 +25,6 @@ jobs:
 
       - name: Trigger Deploy Webhook
         run: |
-          curl -X POST \
+          curl -X POST https://elight.lk/api/deploy/VeodmBiSjCigZdoLhF_Uj \
           -H "Content-Type: application/json" \
-          -d '{"push_data":{"tag":"latest"}}' \
-          https://elight.lk/api/deploy/VeodmBiSjCigZdoLhF_Uj
+          -d '{"push_data":{"tag":"latest"}}'
